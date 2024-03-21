@@ -14,52 +14,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-# *To the reader* 
-
-Welcome to the R package building helper *readme2pkg.template*!
-
-Below, is a readme that provides steps for building a package.  This readme acts as a worksheet, checklist, and control document as functions used in package building are included within and can be used in advancing development.  
-
-We'll use the `{readme2pkg}` helper package to send code chunks to different directories in the package.  
-
-To install `{readme2pkg}`:
-
-```
-
-remotes::install_github("EvaMaeRey/readme2pkg")
-
-```
-
-# Part 0. Proposal
-
-Proposing the {xxxx} package! 🦄 
-<!-- (typical package introduction write up; but actually aspirational) -->
-
-The goal of {xxxx} is to make ... easier.
-
-
-Without the package, we live in the effort-ful world that follows 🏋:
-
-```{r}
-x <- 4
-
-2*x
-
-```
-
-  
-With the {xxxx} package, we'll live in a different world (🦄 🦄 🦄) where the task is a snap 🫰: 
-
-Proposed API:
-
-```
-
-library(xxxxx)
-
-xxxxx::times_two(x = 4)
-
-```
-
 
 
 # Part I. Work out functionality  🚧 ✅ 
@@ -67,19 +21,36 @@ xxxxx::times_two(x = 4)
 Here is a function that will do some work...
 
 
-```{r times_two}
-times_two <- function(x){
+```{r write_new_function_from_template}
+write_function_template <- function(){
+'say_hello <- function(){
   
-  x*2
+  "hello"
   
+}'
 }
+
+write_new_function_from_template <- function(pattern = "hello", replacement = "hi"){
+  
+  tmp <- tempfile()
+  
+  write_function_template() |>
+    stringr::str_replace_all(pattern = pattern,
+                         replacement = replacement) |>
+    writeLines(con = tmp)
+
+  source(tmp)
+
+  }
 ```
 
 
 ## Try it out
 
 ```{r}
-times_two(4)
+write_new_function_from_template()
+
+say_hi()
 ```
 
 
@@ -106,7 +77,7 @@ This means ...
 file -- this can be done automatically with `usethis::use_package`, the example is the case where ggplot2 is a dependency:
 
 ```{r, eval = F}
-usethis::use_package("ggplot2")
+usethis::use_package("stringr")
 ```
 
 
@@ -115,7 +86,7 @@ usethis::use_package("ggplot2")
 Use new {readme2pkg} function to do this from readme...
 
 ```{r, eval = F}
-readme2pkg::chunk_to_r(chunk_name = "times_two")
+readme2pkg::chunk_to_r(chunk_name = "write_new_function_from_template")
 ```
 
 
@@ -147,9 +118,11 @@ remotes::install_github("GithubCoolUser/mypacakge")
 
 Once functions are exported you can remove go to two colons, and when things are are really finalized, then go without colons (and rearrange your readme...)
 
-```{r, eval = F}
-library(mypackage)  ##<< change to your package name here
-mypackage:::times_two(10)
+```{r, eval = T}
+library(sourcing.in.function)  ##<< change to your package name here
+sourcing.in.function:::write_new_function_from_template("hello", "byebye")
+
+say_byebye()
 ```
 
 

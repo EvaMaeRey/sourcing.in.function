@@ -1,6 +1,4 @@
 
-  - [*To the reader*](#to-the-reader)
-  - [Part 0. Proposal](#part-0-proposal)
   - [Part I. Work out functionality 🚧
     ✅](#part-i-work-out-functionality--)
       - [Try it out](#try-it-out)
@@ -21,70 +19,40 @@
       - [`devtools::check()` report](#devtoolscheck-report)
       - [Package directory file tree](#package-directory-file-tree)
 
-# *To the reader*
-
-Welcome to the R package building helper *readme2pkg.template*\!
-
-Below, is a readme that provides steps for building a package. This
-readme acts as a worksheet, checklist, and control document as functions
-used in package building are included within and can be used in
-advancing development.
-
-We’ll use the `{readme2pkg}` helper package to send code chunks to
-different directories in the package.
-
-To install `{readme2pkg}`:
-
-``` 
-
-remotes::install_github("EvaMaeRey/readme2pkg")
-```
-
-# Part 0. Proposal
-
-Proposing the {xxxx} package\! 🦄
-<!-- (typical package introduction write up; but actually aspirational) -->
-
-The goal of {xxxx} is to make … easier.
-
-Without the package, we live in the effort-ful world that follows 🏋:
-
-``` r
-x <- 4
-
-2*x
-#> [1] 8
-```
-
-With the {xxxx} package, we’ll live in a different world (🦄 🦄 🦄) where
-the task is a snap 🫰:
-
-Proposed API:
-
-``` 
-
-library(xxxxx)
-
-xxxxx::times_two(x = 4)
-```
-
 # Part I. Work out functionality 🚧 ✅
 
 Here is a function that will do some work…
 
 ``` r
-times_two <- function(x){
+write_function_template <- function(){
+'say_hello <- function(){
   
-  x*2
+  "hello"
   
+}'
 }
+
+write_new_function_from_template <- function(pattern = "hello", replacement = "hi"){
+  
+  tmp <- tempfile()
+  
+  write_function_template() |>
+    stringr::str_replace_all(pattern = pattern,
+                         replacement = replacement) |>
+    writeLines(con = tmp)
+
+  source(tmp)
+
+  }
 ```
 
 ## Try it out
 
 ``` r
-times_two(4)
-#> [1] 8
+write_new_function_from_template()
+
+say_hi()
+#> [1] "hi"
 ```
 
 # Part II. Packaging and documentation 🚧 ✅
@@ -113,7 +81,7 @@ This means …
 <!-- end list -->
 
 ``` r
-usethis::use_package("ggplot2")
+usethis::use_package("stringr")
 ```
 
 ### Bit C. Moved functions [R code folder](https://r-pkgs.org/code.html)? 🚧 ✅
@@ -121,7 +89,7 @@ usethis::use_package("ggplot2")
 Use new {readme2pkg} function to do this from readme…
 
 ``` r
-readme2pkg::chunk_to_r(chunk_name = "times_two")
+readme2pkg::chunk_to_r(chunk_name = "write_new_function_from_template")
 ```
 
 ### Bit D. Run [`devtools::check()`](https://r-pkgs.org/whole-game.html#check) and address errors. 🚧 ✅
@@ -151,8 +119,11 @@ things are are really finalized, then go without colons (and rearrange
 your readme…)
 
 ``` r
-library(mypackage)  ##<< change to your package name here
-mypackage:::times_two(10)
+library(sourcing.in.function)  ##<< change to your package name here
+sourcing.in.function:::write_new_function_from_template("hello", "byebye")
+
+say_byebye()
+#> [1] "byebye"
 ```
 
 ### Bit G. Add [lifecycle badge](https://r-pkgs.org/lifecycle.html) (experimental) 🚧 ✅
@@ -258,9 +229,9 @@ all[11:17]
 #> [2] "attached base packages:"                                                  
 #> [3] "[1] stats     graphics  grDevices utils     datasets  methods   base     "
 #> [4] ""                                                                         
-#> [5] "loaded via a namespace (and not attached):"                               
-#> [6] " [1] compiler_4.2.2  fastmap_1.1.1   cli_3.6.1       tools_4.2.2    "     
-#> [7] " [5] htmltools_0.5.4 rstudioapi_0.14 yaml_2.3.7      rmarkdown_2.20 "
+#> [5] "other attached packages:"                                                 
+#> [6] "[1] sourcing.in.function_0.0.0.9000"                                      
+#> [7] ""
 ```
 
 ## `devtools::check()` report
@@ -274,7 +245,12 @@ devtools::check(pkg = ".")
 ``` r
 fs::dir_tree(recurse = T)
 #> .
+#> ├── DESCRIPTION
+#> ├── NAMESPACE
+#> ├── R
+#> │   └── write_new_function_from_template.R
 #> ├── README.Rmd
 #> ├── README.md
-#> └── readme2pkg.template.Rproj
+#> ├── man
+#> └── sourcing.in.function.Rproj
 ```
